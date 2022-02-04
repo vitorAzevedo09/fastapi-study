@@ -1,15 +1,24 @@
+from typing import Optional
 from pydantic import BaseModel
 
 from fastapi import FastAPI
-from fastapi.param_functions import Body
 
 app = FastAPI()
 
 
 class Post(BaseModel):
+    """Post."""
+
     title: str
     content: str
     published: bool = True
+    rating: Optional[int] = None
+
+
+my_posts = [
+    {"title": "title of post 1", "content": "content of post 1", "id": 1},
+    {"title": "favorites foods", "content": "i like pizza", "id": 2},
+]
 
 
 @app.get("/")
@@ -21,10 +30,10 @@ def get_users():
 @app.get("/posts")
 def get_posts():
     """show all posts"""
-    return {"data": "This is your posts"}
+    return {"data": my_posts}
 
 
-@app.post("/createposts")
-def create_posts(new_post: Post):
+@app.post("/posts")
+def create_posts(post: Post):
     """create post"""
-    return {"new_post": f"title: {new_post.title}, content: {new_post.content}"}
+    return {"post": f"title: {post.title}, content: {post.content}"}
